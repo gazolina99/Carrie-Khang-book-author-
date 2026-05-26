@@ -4,6 +4,12 @@ import { compare } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
 // Some platforms inject the public URL automatically.
+if (!process.env.AUTH_URL && process.env.RAILWAY_PUBLIC_DOMAIN) {
+  process.env.AUTH_URL = `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`;
+}
+if (!process.env.NEXT_PUBLIC_SITE_URL && process.env.RAILWAY_PUBLIC_DOMAIN) {
+  process.env.NEXT_PUBLIC_SITE_URL = `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`;
+}
 if (!process.env.AUTH_URL && process.env.VERCEL_URL) {
   process.env.AUTH_URL = `https://${process.env.VERCEL_URL}`;
 }

@@ -5,7 +5,9 @@
  */
 export async function register() {
   const runOnBoot =
-    process.env.RUN_DB_SETUP_ON_BOOT === "1" || Boolean(process.env.NETLIFY);
+    process.env.RUN_DB_SETUP_ON_BOOT === "1" ||
+    Boolean(process.env.NETLIFY) ||
+    Boolean(process.env.RAILWAY_ENVIRONMENT);
   if (!runOnBoot) return;
 
   if (!process.env.DATABASE_URL) {

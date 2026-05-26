@@ -1,0 +1,51 @@
+FIX RAILWAY — "Author dashboard is not available yet"
+=======================================================
+
+That message = Railway is missing DATABASE_URL and/or AUTH_SECRET.
+Fix in 5 minutes:
+
+
+STEP 1 — Open Railway variables
+  railway.app → your project → click the web service → Variables tab
+
+
+STEP 2 — Add these EXACT variable names (click + New Variable for each)
+
+  DATABASE_URL
+    Your Neon postgres connection string (postgresql://…)
+    Same one you used for Vercel / local .env
+
+  AUTH_SECRET
+    Any long random string, example:
+    CarrieSite2026SecretKeyRandom123
+
+  ADMIN_EMAIL
+    author@example.com
+
+  ADMIN_PASSWORD
+    your-demo-password
+
+  You do NOT need AUTH_URL — Railway sets it automatically after redeploy.
+
+
+STEP 3 — Redeploy
+  Deployments tab → Redeploy (or push any commit to GitHub)
+
+  Build runs migrations + creates your login user automatically.
+
+
+STEP 4 — Sign in
+  https://YOUR-APP.up.railway.app/login
+
+  Email:    author@example.com
+  Password: whatever you set for ADMIN_PASSWORD
+
+
+STILL NOT WORKING?
+  • Variables tab — confirm DATABASE_URL and AUTH_SECRET are there (no typos)
+  • Deployments → latest → View logs — look for "prisma migrate" errors
+  • Make sure you pulled latest code from GitHub (includes railway.toml)
+
+
+DO NOT USE SQLite ON RAILWAY
+  This project uses Postgres. Use your Neon DATABASE_URL — not file:./dev.db
