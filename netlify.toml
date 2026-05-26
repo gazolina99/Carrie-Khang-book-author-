@@ -1,0 +1,10 @@
+# Carrie Khang author site — deploy on Netlify only (not Vercel)
+
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

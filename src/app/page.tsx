@@ -1,65 +1,142 @@
-import Image from "next/image";
+import Link from "next/link";
+import { BookCoverInteractive } from "@/components/book-cover-interactive";
+import { SetupNeeded } from "@/components/setup-needed";
+import { prisma } from "@/lib/prisma";
+import { getSiteSettings } from "@/lib/settings";
 
-export default function Home() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ needAdminSeed?: string }>;
+}) {
+  const { needAdminSeed } = await searchParams;
+
+  let settings;
+  let books;
+  try {
+    [settings, books] = await Promise.all([
+      getSiteSettings(),
+      prisma.book.findMany({
+        where: { published: true },
+        orderBy: { sortOrder: "asc" },
+        take: 6,
+      }),
+    ]);
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "Database not ready";
+    return <SetupNeeded detail={msg} />;
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div>
+      {needAdminSeed ? (
+        <div className="border-b border-amber-200/80 bg-amber-50 px-5 py-4 text-center text-base text-amber-950 md:px-10">
+          Author login not ready yet. In Netlify, set ADMIN_EMAIL and
+          ADMIN_PASSWORD, then redeploy. Then{" "}
+          <Link href="/login" className="font-semibold underline">
+            sign in
+          </Link>
+          .
+        </div>
+      ) : null}
+      <section className="border-b border-line/60 bg-gradient-to-b from-paper via-canvas to-mist/30 py-20 md:py-28">
+        <div className="mx-auto max-w-6xl px-5 md:px-10">
+          <p className="text-base font-semibold uppercase tracking-[0.25em] text-sky-deep">
+            {settings.tagline || "Stories for families"}
           </p>
+          <h1 className="mt-6 max-w-4xl font-serif text-4xl font-medium leading-[1.1] tracking-tight text-ink md:text-5xl lg:text-6xl">
+            {settings.heroTitle || settings.siteName}
+          </h1>
+          <p className="mt-8 max-w-2xl text-xl leading-relaxed text-ink-muted md:text-2xl">
+            {settings.heroSubtitle}
+          </p>
+          <div className="mt-12 flex flex-wrap gap-4">
+            <Link
+              href="/books"
+              className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-10 py-4 text-lg font-semibold text-white shadow-lg shadow-sky-deep/20 transition hover:brightness-105"
+            >
+              View books
+            </Link>
+            <Link
+              href="/reviews#write"
+              className="inline-flex items-center justify-center rounded-full border-2 border-line bg-paper/90 px-10 py-4 text-lg font-semibold text-ink shadow-sm backdrop-blur-sm transition hover:border-rose-deep/35 hover:bg-blush/40"
+            >
+              Reader reviews
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 py-20 md:px-10 md:py-24">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="font-serif text-3xl font-medium text-ink md:text-4xl">
+              Books
+            </h2>
+            <p className="mt-2 max-w-xl text-lg text-ink-muted">
+              Gentle reads for parents—covers, descriptions, and shop links stay
+              in your control from the dashboard.
+            </p>
+          </div>
+          <Link
+            href="/books"
+            className="text-lg font-semibold text-[var(--accent)] hover:underline"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            See all
+          </Link>
         </div>
-      </main>
+        {books.length === 0 ? (
+          <p className="mt-12 rounded-3xl border-2 border-dashed border-line bg-paper/80 p-10 text-center text-lg text-ink-muted">
+            No books published yet. Open the dashboard to add your first title.
+          </p>
+        ) : (
+          <ul className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            {books.map((book) => (
+              <li
+                key={book.id}
+                className="flex flex-col overflow-visible rounded-3xl border border-line/80 bg-paper shadow-md ring-1 ring-line-soft/50"
+              >
+                <div className="relative flex justify-center bg-gradient-to-b from-mist/55 via-canvas/75 to-paper px-5 pb-14 pt-9 md:px-8 md:pb-16 md:pt-10">
+                  <div className="relative w-[88%] max-w-[15rem]">
+                    {book.coverPath ? (
+                      <BookCoverInteractive
+                        detached
+                        src={book.coverPath}
+                        alt={`${book.title} cover`}
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                    ) : (
+                      <div className="flex aspect-[3/4] items-center justify-center rounded-2xl border border-dashed border-line bg-mist/40 p-6 text-center text-base text-ink-muted md:text-lg">
+                        Cover image not set
+                      </div>
+                    )}
+                  </div>
+                  <div
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-paper via-paper/90 to-transparent"
+                    aria-hidden
+                  />
+                </div>
+                <div className="flex flex-1 flex-col border-t border-line/55 px-6 pb-7 pt-1 md:px-7 md:pb-8">
+                  <h3 className="font-serif text-xl font-medium text-ink md:text-2xl">
+                    {book.title}
+                  </h3>
+                  <p className="mt-3 line-clamp-3 flex-1 text-lg leading-relaxed text-ink-muted">
+                    {book.description}
+                  </p>
+                  <a
+                    href={book.buyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex justify-center rounded-full bg-[var(--accent)] px-6 py-3 text-base font-semibold text-white transition hover:brightness-105"
+                  >
+                    Buy now
+                  </a>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

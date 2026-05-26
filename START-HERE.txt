@@ -1,0 +1,10 @@
+READ README.md
+
+This site runs on NETLIFY — not Vercel.
+
+Quick:
+  1. GitHub → upload this folder
+  2. app.netlify.com → Import from GitHub
+  3. Extensions → Netlify DB → Enable
+  4. Environment variables → AUTH_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD
+  5. Deploy again → open your .netlify.app link

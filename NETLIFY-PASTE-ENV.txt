@@ -1,0 +1,13 @@
+Netlify → Site configuration → Environment variables
+
+Only paste these 3 (DATABASE_URL comes from Netlify DB automatically):
+
+AUTH_SECRET = paste-any-long-random-string-here
+
+ADMIN_EMAIL = carrie@example.com
+
+ADMIN_PASSWORD = pick-a-strong-password
+
+Then: Deploys → Trigger deploy → Deploy site
+
+Do NOT use Vercel.

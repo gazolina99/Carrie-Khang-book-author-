@@ -1,26 +1,134 @@
 @import "tailwindcss";
 
+/* Warm, parent-friendly palette: cream, white, soft blue, soft pink */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --canvas: #f3ebe1;
+  --paper: #fffdf9;
+  --mist: #e4eef8;
+  --blush: #fce9ef;
+  --ink: #3a3630;
+  --ink-muted: #6f6860;
+  --line: #e2d8cc;
+  --line-soft: #efe6dc;
+  --sky: #b3cce8;
+  --sky-deep: #7a9fc4;
+  --rose: #e8bcc9;
+  --rose-deep: #c98fa3;
+  /* Dashboard accent from settings — default soft blue */
+  --accent: #8aa8cf;
+  --accent-contrast: #ffffff;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-canvas: var(--canvas);
+  --color-paper: var(--paper);
+  --color-mist: var(--mist);
+  --color-blush: var(--blush);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-sky: var(--sky);
+  --color-sky-deep: var(--sky-deep);
+  --color-rose: var(--rose);
+  --color-rose-deep: var(--rose-deep);
+  --color-background: var(--canvas);
+  --color-foreground: var(--ink);
+  --font-sans: var(--font-plus-jakarta);
+  --font-serif: var(--font-fraunces);
+  --radius-4xl: 2rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--canvas);
+  background-image:
+    radial-gradient(
+      ellipse 120% 80% at 100% -20%,
+      color-mix(in srgb, var(--mist) 55%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 90% 60% at -10% 40%,
+      color-mix(in srgb, var(--blush) 45%, transparent),
+      transparent 50%
+    );
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-plus-jakarta), system-ui, sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
+}
+
+.font-serif {
+  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
+}
+
+/* Slightly larger headings on the marketing site */
+.prose-author h1,
+.prose-author h2 {
+  letter-spacing: -0.02em;
+}
+
+/* Book covers: subtle motion on touch / when scrolled into view */
+@keyframes book-cover-drift {
+  0%,
+  100% {
+    transform: translateY(0) scale(1.02);
+  }
+  50% {
+    transform: translateY(-7px) scale(1.045);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .book-cover-drift {
+    animation: book-cover-drift 5.5s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book-cover-drift {
+    animation: none;
+  }
+}
+
+/* Drift on inner face only (used when outer slab has a fixed tilt) */
+@keyframes book-cover-drift-inner {
+  0%,
+  100% {
+    transform: translateY(0) scale(1.01);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.03);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .book-cover-drift-inner {
+    animation: book-cover-drift-inner 5.5s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book-cover-drift-inner {
+    animation: none;
+  }
+}
+
+/* Default cover shadow */
+.book-shaped-frame {
+  filter: drop-shadow(3px 6px 14px rgba(58, 54, 48, 0.2))
+    drop-shadow(1px 2px 4px rgba(58, 54, 48, 0.12));
+}
+
+/* “Book on a table” — stronger lift so it reads apart from the card */
+.book-detached-slab {
+  filter: drop-shadow(0 10px 10px rgba(58, 54, 48, 0.12))
+    drop-shadow(0 22px 28px rgba(58, 54, 48, 0.16))
+    drop-shadow(0 4px 6px rgba(58, 54, 48, 0.1));
 }

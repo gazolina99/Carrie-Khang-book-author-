@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Book {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  buyUrl      String
+  coverPath   String?
+  sortOrder   Int      @default(0)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  reviews     Review[]
+}
+
+model SiteSettings {
+  id                  String   @id @default("singleton")
+  siteName            String   @default("Carrie Khang")
+  tagline             String   @default("")
+  heroTitle           String   @default("")
+  heroSubtitle        String   @default("")
+  accentHex           String   @default("#8aa8cf")
+  aboutBody           String   @default("")
+  footerNote          String   @default("")
+  contactEmailPublic  String   @default("")
+  twitterUrl          String   @default("")
+  instagramUrl        String   @default("")
+  goodreadsUrl        String   @default("")
+  newsletterFromEmail String   @default("")
+  newsletterReplyTo   String   @default("")
+  wordpressBlogUrl    String   @default("")
+  updatedAt           DateTime @updatedAt
+}
+
+model Subscriber {
+  id               String   @id @default(cuid())
+  email            String   @unique
+  createdAt        DateTime @default(now())
+  unsubscribed     Boolean  @default(false)
+  unsubscribeToken String   @unique
+}
+
+model NewsletterSend {
+  id             String    @id @default(cuid())
+  subject        String
+  bodyText       String
+  sentAt         DateTime?
+  createdAt      DateTime  @default(now())
+  recipientCount Int       @default(0)
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  authorName String
+  rating     Int
+  body       String
+  bookId     String?
+  book       Book?    @relation(fields: [bookId], references: [id], onDelete: SetNull)
+  approved   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
