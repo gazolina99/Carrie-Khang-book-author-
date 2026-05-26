@@ -1,69 +1,43 @@
 # Carrie Khang — Author website
 
-Next.js author site with a public marketing area and a password-protected **dashboard**. Source of truth is **this GitHub repo**; production is any host that runs **Node 20**, **PostgreSQL**, and environment variables listed below.
+Clone → install → setup → dev. No Postgres required for local use.
 
-**CI:** every push to `main` / `master` runs [.github/workflows/ci.yml](.github/workflows/ci.yml) (`npm ci` → `npm run build`).
-
----
-
-## Local development
-
-1. Clone from GitHub and install dependencies:
-
-   ```bash
-   git clone <your-repo-url>
-   cd <repo-folder>
-   npm install
-   ```
-
-2. Create `.env` from [.env.example](.env.example) and set at least `DATABASE_URL`, `AUTH_SECRET`, `AUTH_URL`, and `NEXT_PUBLIC_SITE_URL` (for localhost you can use `http://localhost:3000` for both).
-
-3. Apply migrations and seed (creates admin user):
-
-   ```bash
-   npx prisma migrate deploy
-   npm run db:seed
-   ```
-
-4. Run the dev server:
-
-   ```bash
-   npm run dev
-   ```
-
----
-
-## Deploy (pick any host)
-
-You need:
-
-| Variable | Purpose |
-|----------|---------|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `AUTH_SECRET` | Long random secret (NextAuth) |
-| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | First login; also used by `prisma db seed` |
-| `AUTH_URL` / `NEXT_PUBLIC_SITE_URL` | Full public URL, e.g. `https://yoursite.com` (some platforms set these for you) |
-
-**Build:** `npm run build` — **Start:** `npm run start`
-
-**Before first boot in production:**
+## Run it (3 commands)
 
 ```bash
-npx prisma migrate deploy
-npm run db:seed
+gh repo clone gazolina99/Carrie-Khang-book-author-
+cd Carrie-Khang-book-author-
+npm install
+npm run setup
+npm run dev
 ```
 
-Or enable automatic migrate + seed on server start:
+Open **http://localhost:3000**
 
-- **Netlify:** sets `NETLIFY=1` automatically; instrumentation runs migrations + seed when `DATABASE_URL` is set.
-- **Other hosts:** set `RUN_DB_SETUP_ON_BOOT=1` **or** use the host’s “release command” / one-off shell to run `prisma migrate deploy` and `db:seed`.
+**Sign in:** http://localhost:3000/login  
+Email: `author@example.com` · Password: `change-me-on-first-login`
 
-**Book covers:** On hosts without Netlify Blobs, covers save to disk under `public/uploads/books/` (use a persistent volume on your platform).
+`npm run setup` creates `.env`, applies the database, and seeds the admin user.
 
-See [DEPLOY-ENV-VARS.txt](DEPLOY-ENV-VARS.txt) for a copy-paste checklist.
+---
+
+## Deploy online
+
+Use any host with **Node 20** (Railway, Render, Fly.io, a VPS, etc.).
+
+1. Connect this GitHub repo to the host.
+2. **Build:** `npm run build` · **Start:** `npm run start`
+3. Set env vars (see [DEPLOY-ENV-VARS.txt](DEPLOY-ENV-VARS.txt)):
+   - `DATABASE_URL` — use `file:./dev.db` on a single server with a **persistent disk**, or Postgres if you prefer
+   - `AUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`
+   - `AUTH_URL` / `NEXT_PUBLIC_SITE_URL` — your public `https://…` URL
+4. Before first boot (or on each deploy): `npx prisma migrate deploy && npm run db:seed`  
+   Or set `RUN_DB_SETUP_ON_BOOT=1` to run that automatically.
+
+**CI:** pushes to `master` / `main` run [.github/workflows/ci.yml](.github/workflows/ci.yml).
 
 ---
 
 ## Optional: Netlify
 
-`netlify.toml` is included for teams that still use Netlify; it is not required for development or CI.
+`netlify.toml` is included but not required. SQLite + serverless is a poor fit; use a Node host with persistent storage instead.

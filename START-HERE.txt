@@ -1,12 +1,11 @@
-READ README.md
+READ README.md — 3 steps after clone:
 
-This repo runs on GitHub for source control.
-Production = any Node 20 + PostgreSQL host (see README).
+  npm install
+  npm run setup
+  npm run dev
 
-Quick local:
-  1. npm install
-  2. Copy .env.example to .env and fill DATABASE_URL + AUTH_SECRET
-  3. npx prisma migrate deploy && npm run db:seed
-  4. npm run dev → http://localhost:3000
+→ http://localhost:3000
+→ login: author@example.com / change-me-on-first-login
 
-Copy-paste env names: DEPLOY-ENV-VARS.txt
+Clone command:
+  gh repo clone gazolina99/Carrie-Khang-book-author-

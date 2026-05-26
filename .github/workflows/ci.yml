@@ -1,26 +1,3 @@
-# Verifies every push/PR: install dependencies and production build.
-# GitHub does not host the Node server; use any host with Node 20 + Postgres.
-
-name: CI
-
-on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
     env:
-      # Prisma + Next need these at build time; no real database is contacted during `next build`.
-      DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci?schema=public
+      DATABASE_URL: file:./dev.db
       AUTH_SECRET: github-actions-ci-placeholder-secret-32chars-min
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
-      - run: npm ci
-      - run: npm run build

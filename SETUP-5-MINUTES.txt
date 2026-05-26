@@ -1,30 +1,20 @@
-FIX LOGIN / DASHBOARD IN A FEW MINUTES (you, not the client)
+LOCAL — after clone (2 min)
+============================
 
-The public site works without DB. Sign-in needs PostgreSQL + env vars.
+  npm install
+  npm run setup
+  npm run dev
 
-STEP 1 — Database
-  https://neon.tech → New project → copy connection string → DATABASE_URL
+  http://localhost:3000
+  login: author@example.com / change-me-on-first-login
 
-STEP 2 — Host env vars
-  Add in your hosting dashboard (Railway, Render, Fly, VPS shell, Netlify — same vars):
+ONLINE — when you deploy for a client
+=====================================
 
-    DATABASE_URL   = from Neon
-    AUTH_SECRET    = long random string
-    ADMIN_EMAIL    = author@example.com
-    ADMIN_PASSWORD = your-password
+  1. Connect GitHub repo to Railway / Render / VPS
+  2. Add env vars from DEPLOY-ENV-VARS.txt
+  3. Build: npm run build   Start: npm run start
+  4. Set RUN_DB_SETUP_ON_BOOT=1 on first deploy (or run migrate + seed once)
 
-Optional URL (many hosts set automatically):
-    AUTH_URL = https://your-domain.TLD/
-    NEXT_PUBLIC_SITE_URL = same as AUTH_URL
-
-STEP 3 — First-time DB (pick one)
-
-  A) SSH / one-off on the host before start:
-       npx prisma migrate deploy && npm run db:seed
-
-  B) Auto on boot — set RUN_DB_SETUP_ON_BOOT=1 (see README).
-
-STEP 4 — Deploy / restart
-STEP 5 — Sign in at /login
-
-Full detail: README.md · names only: DEPLOY-ENV-VARS.txt
+Clone:
+  gh repo clone gazolina99/Carrie-Khang-book-author-

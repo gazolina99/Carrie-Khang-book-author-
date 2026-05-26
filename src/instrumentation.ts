@@ -9,7 +9,7 @@ export async function register() {
   if (!runOnBoot) return;
 
   if (!process.env.DATABASE_URL) {
-    console.warn("[setup] DATABASE_URL is missing — add PostgreSQL and redeploy.");
+    console.warn("[setup] DATABASE_URL is missing — run npm run setup or add .env.");
     return;
   }
 
