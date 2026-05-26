@@ -1,44 +1,18 @@
 import Link from "next/link";
 import { BookCoverInteractive } from "@/components/book-cover-interactive";
-import { SetupNeeded } from "@/components/setup-needed";
-import { prisma } from "@/lib/prisma";
-import { getSiteSettings } from "@/lib/settings";
+import {
+  getPublishedBooks,
+  getSiteSettingsSafe,
+} from "@/lib/site-data";
 
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ needAdminSeed?: string }>;
-}) {
-  const { needAdminSeed } = await searchParams;
-
-  let settings;
-  let books;
-  try {
-    [settings, books] = await Promise.all([
-      getSiteSettings(),
-      prisma.book.findMany({
-        where: { published: true },
-        orderBy: { sortOrder: "asc" },
-        take: 6,
-      }),
-    ]);
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : "Database not ready";
-    return <SetupNeeded detail={msg} />;
-  }
+export default async function HomePage() {
+  const [settings, books] = await Promise.all([
+    getSiteSettingsSafe(),
+    getPublishedBooks(),
+  ]);
 
   return (
     <div>
-      {needAdminSeed ? (
-        <div className="border-b border-amber-200/80 bg-amber-50 px-5 py-4 text-center text-base text-amber-950 md:px-10">
-          Author login not ready yet. In Netlify, set ADMIN_EMAIL and
-          ADMIN_PASSWORD, then redeploy. Then{" "}
-          <Link href="/login" className="font-semibold underline">
-            sign in
-          </Link>
-          .
-        </div>
-      ) : null}
       <section className="border-b border-line/60 bg-gradient-to-b from-paper via-canvas to-mist/30 py-20 md:py-28">
         <div className="mx-auto max-w-6xl px-5 md:px-10">
           <p className="text-base font-semibold uppercase tracking-[0.25em] text-sky-deep">
@@ -87,7 +61,7 @@ export default async function HomePage({
         </div>
         {books.length === 0 ? (
           <p className="mt-12 rounded-3xl border-2 border-dashed border-line bg-paper/80 p-10 text-center text-lg text-ink-muted">
-            No books published yet. Open the dashboard to add your first title.
+            New titles coming soon. Check back shortly.
           </p>
         ) : (
           <ul className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">

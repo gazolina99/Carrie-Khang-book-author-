@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import type { SiteSettings } from "@prisma/client";
 import { auth } from "@/auth";
 import { SessionProvider } from "@/components/session-provider";
 import { AdminDock } from "@/components/admin-dock";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { getSiteSettings } from "@/lib/settings";
+import { defaultSiteSettings, getSiteSettingsSafe } from "@/lib/site-data";
 import "./globals.css";
 
 export const dynamic = "force-dynamic";
@@ -21,12 +22,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  let s = defaultSettings;
-  try {
-    s = await getSiteSettings();
-  } catch {
-    /* ok */
-  }
+  const s = await getSiteSettingsSafe();
   return {
     title: {
       default: s.siteName,
@@ -36,40 +32,14 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-import type { SiteSettings } from "@prisma/client";
-
-const defaultSettings: SiteSettings = {
-  id: "singleton",
-  siteName: "Carrie Khang",
-  tagline: "",
-  heroTitle: "",
-  heroSubtitle: "",
-  accentHex: "#8aa8cf",
-  aboutBody: "",
-  footerNote: "",
-  contactEmailPublic: "",
-  twitterUrl: "",
-  instagramUrl: "",
-  goodreadsUrl: "",
-  newsletterFromEmail: "",
-  newsletterReplyTo: "",
-  wordpressBlogUrl: "",
-  updatedAt: new Date(0),
-};
-
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  let settings: SiteSettings = defaultSettings;
-  try {
-    settings = await getSiteSettings();
-  } catch {
-    /* database not ready — child pages show setup help */
-  }
+  const settings: SiteSettings = await getSiteSettingsSafe();
   const session = await auth().catch(() => null);
-  const accent = settings.accentHex || "#8aa8cf";
+  const accent = settings.accentHex || defaultSiteSettings.accentHex;
 
   return (
     <html

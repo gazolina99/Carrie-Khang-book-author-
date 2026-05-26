@@ -12,9 +12,7 @@ export async function register() {
   try {
     const { execSync } = await import("child_process");
     execSync("npx prisma migrate deploy", { stdio: "inherit" });
-    if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
-      execSync("npx prisma db seed", { stdio: "inherit" });
-    }
+    execSync("npx prisma db seed", { stdio: "inherit" });
   } catch (err) {
     console.error("[setup] Database setup failed:", err);
   }

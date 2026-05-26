@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getSiteSettings } from "@/lib/settings";
+import { getSiteSettingsSafe } from "@/lib/site-data";
 
 export async function generateMetadata(): Promise<Metadata> {
   return { title: "Blog" };
 }
 
 export default async function BlogPage() {
-  const settings = await getSiteSettings();
+  const settings = await getSiteSettingsSafe();
   const url = settings.wordpressBlogUrl?.trim();
 
   return (

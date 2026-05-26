@@ -1,26 +1,22 @@
 import type { Metadata } from "next";
-import { prisma } from "@/lib/prisma";
 import { ReviewForm } from "@/components/review-form";
 import { StarRatingDisplay } from "@/components/star-rating-display";
 import { SubscribeForm } from "@/components/subscribe-form";
+import {
+  getApprovedReviews,
+  getBooksForReviewPicker,
+  isDatabaseConfigured,
+} from "@/lib/site-data";
 
 export async function generateMetadata(): Promise<Metadata> {
   return { title: "Reviews" };
 }
 
 export default async function ReviewsPage() {
-  const [reviews, books] = await Promise.all([
-    prisma.review.findMany({
-      where: { approved: true },
-      orderBy: { createdAt: "desc" },
-      include: { book: { select: { title: true } } },
-    }),
-    prisma.book.findMany({
-      where: { published: true },
-      orderBy: { sortOrder: "asc" },
-      select: { id: true, title: true },
-    }),
-  ]);
+  const dbReady = isDatabaseConfigured();
+  const [reviews, books] = dbReady
+    ? await Promise.all([getApprovedReviews(), getBooksForReviewPicker()])
+    : [[], []];
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-16 md:px-10 md:py-24">
@@ -42,7 +38,13 @@ export default async function ReviewsPage() {
             any message.
           </p>
           <div className="mt-8">
-            <SubscribeForm />
+            {dbReady ? (
+              <SubscribeForm />
+            ) : (
+              <p className="text-lg text-ink-muted">
+                Newsletter sign-up will open soon.
+              </p>
+            )}
           </div>
         </div>
       </section>
@@ -52,7 +54,13 @@ export default async function ReviewsPage() {
           Leave a review
         </h2>
         <div className="mt-8">
-          <ReviewForm books={books} />
+          {dbReady ? (
+            <ReviewForm books={books} />
+          ) : (
+            <p className="text-lg text-ink-muted">
+              Reviews will open soon. Thank you for your patience.
+            </p>
+          )}
         </div>
       </section>
 
@@ -83,7 +91,7 @@ export default async function ReviewsPage() {
         </ul>
         {reviews.length === 0 ? (
           <p className="mt-12 text-center text-lg text-ink-muted">
-            No approved reviews yet—share yours above.
+            No reviews published yet.
           </p>
         ) : null}
       </section>

@@ -12,6 +12,7 @@ if (!process.env.NEXT_PUBLIC_SITE_URL && process.env.URL) {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  secret: process.env.AUTH_SECRET,
   trustHost: true,
   pages: {
     signIn: "/login",

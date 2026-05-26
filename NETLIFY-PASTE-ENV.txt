@@ -1,13 +1,20 @@
-Netlify → Site configuration → Environment variables
+Netlify → your site → Site configuration → Environment variables
 
-Only paste these 3 (DATABASE_URL comes from Netlify DB automatically):
+Add these 4 (copy/paste):
 
-AUTH_SECRET = paste-any-long-random-string-here
+1) DATABASE_URL
+   Get free at https://neon.tech → New project → Connection string
+   Paste the full postgres://... string here
 
-ADMIN_EMAIL = carrie@example.com
+2) AUTH_SECRET
+   Any long random text (example: CarrieSite2026SecretKeyRandomChars)
 
-ADMIN_PASSWORD = pick-a-strong-password
+3) ADMIN_EMAIL
+   author@example.com
+
+4) ADMIN_PASSWORD
+   change-me-on-first-login
 
 Then: Deploys → Trigger deploy → Deploy site
 
-Do NOT use Vercel.
+Sign in at yoursite.netlify.app/login with ADMIN_EMAIL and ADMIN_PASSWORD

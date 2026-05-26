@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { getSiteSettings } from "@/lib/settings";
+import { getSiteSettingsSafe } from "@/lib/site-data";
 
 export async function generateMetadata(): Promise<Metadata> {
   return { title: "About" };
 }
 
 export default async function AboutPage() {
-  const settings = await getSiteSettings();
+  const settings = await getSiteSettingsSafe();
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-16 md:px-10 md:py-24">
@@ -14,7 +14,7 @@ export default async function AboutPage() {
         About {settings.siteName}
       </h1>
       <div className="prose-author mt-10 max-w-none whitespace-pre-wrap text-xl leading-relaxed text-ink-muted">
-        {settings.aboutBody || "Use the dashboard to share your story with parents and caregivers."}
+        {settings.aboutBody}
       </div>
     </div>
   );

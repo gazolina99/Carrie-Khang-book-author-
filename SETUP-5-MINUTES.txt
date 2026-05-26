@@ -1,0 +1,30 @@
+FIX THE SITE IN 5 MINUTES (for you, not your client)
+====================================================
+
+Your client should NEVER see technical errors.
+Right now Netlify is missing the database connection.
+
+STEP 1 — Free database (2 min)
+  Go to https://neon.tech
+  Sign up → New project → Copy "Connection string"
+
+STEP 2 — Netlify (2 min)
+  app.netlify.com → your site → Site configuration → Environment variables
+
+  Add:
+    DATABASE_URL     = (paste Neon connection string)
+    AUTH_SECRET      = any long random string
+    ADMIN_EMAIL      = author@example.com
+    ADMIN_PASSWORD   = change-me-on-first-login
+
+STEP 3 — Redeploy (1 min)
+  Deploys → Trigger deploy → Deploy site
+
+STEP 4 — Sign in
+  yoursite.netlify.app/login
+  Email: author@example.com
+  Password: change-me-on-first-login
+
+STEP 5 — Push code update (optional but recommended)
+  I fixed the site so the HOMEPAGE looks professional even before the database.
+  Commit and push from your PC, then redeploy again.
