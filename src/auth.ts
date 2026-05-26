@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
-// Netlify sets URL automatically — no need to paste AUTH_URL manually
+// Some platforms expose URL (Netlify-style); otherwise set AUTH_URL yourself.
 if (!process.env.AUTH_URL && process.env.URL) {
   process.env.AUTH_URL = process.env.URL;
 }

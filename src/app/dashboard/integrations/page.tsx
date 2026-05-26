@@ -5,16 +5,24 @@ export default function IntegrationsPage() {
         Hosting & integrations
       </h1>
       <section>
-        <h2 className="text-xl font-semibold text-ink">Netlify</h2>
+        <h2 className="text-xl font-semibold text-ink">Hosting</h2>
         <p className="mt-3">
-          This site is built for{" "}
-          <strong className="text-ink">Netlify</strong>. The database is
-          PostgreSQL; book covers are stored in{" "}
-          <strong className="text-ink">Netlify Blobs</strong>. See{" "}
+          Deploy from this GitHub repo to any Node 20 runtime with PostgreSQL.
+          Covers are stored under{" "}
+          <strong className="text-ink">public/uploads/books/</strong> on disk,
+          unless the app runs with Netlify’s runtime (covers then use Blobs +
+          <code className="mx-1 rounded-lg bg-mist/90 px-2 py-0.5 text-sm text-ink">
+            /api/covers/…
+          </code>
+          ). See{" "}
           <code className="rounded-lg bg-mist/90 px-2 py-0.5 text-sm text-ink">
-            NETLIFY.md
+            README.md
           </code>{" "}
-          in the project for deploy steps.
+          and{" "}
+          <code className="rounded-lg bg-mist/90 px-2 py-0.5 text-sm text-ink">
+            DEPLOY-ENV-VARS.txt
+          </code>{" "}
+          for environment variables.
         </p>
       </section>
       <section>
@@ -32,8 +40,8 @@ export default function IntegrationsPage() {
           <code className="rounded-lg bg-mist/90 px-2 py-0.5 text-sm text-ink">
             RESEND_API_KEY
           </code>{" "}
-          in Netlify environment variables, verify your domain in Resend, then
-          set your “from” address in Site settings.
+          in your hosting environment variables, verify your domain in Resend,
+          then set your “from” address in Site settings.
         </p>
       </section>
     </div>

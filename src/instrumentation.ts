@@ -1,11 +1,15 @@
 /**
- * On Netlify: run DB migrations + seed once the server starts.
- * No manual “npm run db:seed” needed if ADMIN_EMAIL / ADMIN_PASSWORD are set in Netlify.
+ * Optional: run DB migrations + seed when the Node server boots.
+ * - Netlify sets NETLIFY=1 automatically.
+ * - Other hosts: set RUN_DB_SETUP_ON_BOOT=1, or run migrate/seed via the host’s release step (often safer).
  */
 export async function register() {
-  if (!process.env.NETLIFY) return;
+  const runOnBoot =
+    process.env.RUN_DB_SETUP_ON_BOOT === "1" || Boolean(process.env.NETLIFY);
+  if (!runOnBoot) return;
+
   if (!process.env.DATABASE_URL) {
-    console.warn("[setup] DATABASE_URL is missing — enable Netlify DB or add Postgres URL.");
+    console.warn("[setup] DATABASE_URL is missing — add PostgreSQL and redeploy.");
     return;
   }
 

@@ -1,30 +1,30 @@
-FIX THE SITE IN 5 MINUTES (for you, not your client)
-====================================================
+FIX LOGIN / DASHBOARD IN A FEW MINUTES (you, not the client)
 
-Your client should NEVER see technical errors.
-Right now Netlify is missing the database connection.
+The public site works without DB. Sign-in needs PostgreSQL + env vars.
 
-STEP 1 — Free database (2 min)
-  Go to https://neon.tech
-  Sign up → New project → Copy "Connection string"
+STEP 1 — Database
+  https://neon.tech → New project → copy connection string → DATABASE_URL
 
-STEP 2 — Netlify (2 min)
-  app.netlify.com → your site → Site configuration → Environment variables
+STEP 2 — Host env vars
+  Add in your hosting dashboard (Railway, Render, Fly, VPS shell, Netlify — same vars):
 
-  Add:
-    DATABASE_URL     = (paste Neon connection string)
-    AUTH_SECRET      = any long random string
-    ADMIN_EMAIL      = author@example.com
-    ADMIN_PASSWORD   = change-me-on-first-login
+    DATABASE_URL   = from Neon
+    AUTH_SECRET    = long random string
+    ADMIN_EMAIL    = author@example.com
+    ADMIN_PASSWORD = your-password
 
-STEP 3 — Redeploy (1 min)
-  Deploys → Trigger deploy → Deploy site
+Optional URL (many hosts set automatically):
+    AUTH_URL = https://your-domain.TLD/
+    NEXT_PUBLIC_SITE_URL = same as AUTH_URL
 
-STEP 4 — Sign in
-  yoursite.netlify.app/login
-  Email: author@example.com
-  Password: change-me-on-first-login
+STEP 3 — First-time DB (pick one)
 
-STEP 5 — Push code update (optional but recommended)
-  I fixed the site so the HOMEPAGE looks professional even before the database.
-  Commit and push from your PC, then redeploy again.
+  A) SSH / one-off on the host before start:
+       npx prisma migrate deploy && npm run db:seed
+
+  B) Auto on boot — set RUN_DB_SETUP_ON_BOOT=1 (see README).
+
+STEP 4 — Deploy / restart
+STEP 5 — Sign in at /login
+
+Full detail: README.md · names only: DEPLOY-ENV-VARS.txt

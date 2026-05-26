@@ -1,0 +1,25 @@
+Add these in your host’s Environment variables UI (Railway, Render, Fly.io, VPS, Netlify — same names everywhere).
+
+Required:
+
+1) DATABASE_URL
+   Free Postgres: https://neon.tech → New project → Connection string
+
+2) AUTH_SECRET
+   Long random string (40+ chars)
+
+3) ADMIN_EMAIL / ADMIN_PASSWORD
+   Author login; prisma seed creates this user.
+
+4) AUTH_URL / NEXT_PUBLIC_SITE_URL
+   Full site URL with https:// (omit only if your platform injects URL automatically.)
+
+Optional bootstrap (if you are not running migrate/seed manually):
+
+  RUN_DB_SETUP_ON_BOOT=1
+  → runs prisma migrate deploy + prisma db seed on server start.
+
+Build command: npm run build
+Start command: npm run start
+
+Sign in at: https://YOUR-DOMAIN/login

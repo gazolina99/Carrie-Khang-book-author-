@@ -1,69 +1,69 @@
 # Carrie Khang — Author website
 
-## NOT VERCEL — use Netlify only
+Next.js author site with a public marketing area and a password-protected **dashboard**. Source of truth is **this GitHub repo**; production is any host that runs **Node 20**, **PostgreSQL**, and environment variables listed below.
 
-If you see “Deploy to Vercel”, you are on the wrong host or the site failed to build.
-This project is built for **Netlify** + **Netlify DB**.
-
----
-
-## Easiest setup (about 10 minutes)
-
-### 1. Put code on GitHub
-
-- Create a repo on GitHub
-- Upload this whole folder (or push with GitHub Desktop)
-
-### 2. Connect Netlify
-
-1. Go to [app.netlify.com](https://app.netlify.com)
-2. **Add new site** → **Import an existing project** → **GitHub**
-3. Pick your repo
-4. Netlify reads `netlify.toml` automatically — click **Deploy** (it may fail once — that’s OK)
-
-### 3. Turn on the database
-
-1. In your site: **Extensions** → **Netlify DB** → **Install** / **Enable**
-2. Netlify adds `DATABASE_URL` for you
-
-### 4. Add 3 environment variables
-
-**Site configuration** → **Environment variables** → **Add a variable**
-
-| Name | Value |
-|------|--------|
-| `AUTH_SECRET` | Any long random string (e.g. 40 letters/numbers) |
-| `ADMIN_EMAIL` | Email Carrie uses to sign in |
-| `ADMIN_PASSWORD` | Password Carrie uses to sign in |
-
-You do **not** need to set `AUTH_URL` — Netlify sets the site URL automatically.
-
-### 5. Deploy again
-
-**Deploys** → **Trigger deploy** → **Deploy site**
-
-Wait until it says **Published**.
-
-### 6. Open the site
-
-- Public site: `https://YOUR-SITE-NAME.netlify.app`
-- Author login: same URL + `/login` or **Author sign in** (bottom-right)
+**CI:** every push to `main` / `master` runs [.github/workflows/ci.yml](.github/workflows/ci.yml) (`npm ci` → `npm run build`).
 
 ---
 
-## Do not
+## Local development
 
-- Do **not** deploy on Vercel
-- Do **not** drag-and-drop a zip on Netlify (use GitHub import)
-- Do **not** skip Netlify DB (the site needs a database)
+1. Clone from GitHub and install dependencies:
+
+   ```bash
+   git clone <your-repo-url>
+   cd <repo-folder>
+   npm install
+   ```
+
+2. Create `.env` from [.env.example](.env.example) and set at least `DATABASE_URL`, `AUTH_SECRET`, `AUTH_URL`, and `NEXT_PUBLIC_SITE_URL` (for localhost you can use `http://localhost:3000` for both).
+
+3. Apply migrations and seed (creates admin user):
+
+   ```bash
+   npx prisma migrate deploy
+   npm run db:seed
+   ```
+
+4. Run the dev server:
+
+   ```bash
+   npm run dev
+   ```
 
 ---
 
-## Local test (optional)
+## Deploy (pick any host)
+
+You need:
+
+| Variable | Purpose |
+|----------|---------|
+| `DATABASE_URL` | PostgreSQL connection string |
+| `AUTH_SECRET` | Long random secret (NextAuth) |
+| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | First login; also used by `prisma db seed` |
+| `AUTH_URL` / `NEXT_PUBLIC_SITE_URL` | Full public URL, e.g. `https://yoursite.com` (some platforms set these for you) |
+
+**Build:** `npm run build` — **Start:** `npm run start`
+
+**Before first boot in production:**
 
 ```bash
-npm install
-npm run dev
+npx prisma migrate deploy
+npm run db:seed
 ```
 
-You need a Postgres URL in `.env` (Neon free tier or Netlify DB connection string).
+Or enable automatic migrate + seed on server start:
+
+- **Netlify:** sets `NETLIFY=1` automatically; instrumentation runs migrations + seed when `DATABASE_URL` is set.
+- **Other hosts:** set `RUN_DB_SETUP_ON_BOOT=1` **or** use the host’s “release command” / one-off shell to run `prisma migrate deploy` and `db:seed`.
+
+**Book covers:** On hosts without Netlify Blobs, covers save to disk under `public/uploads/books/` (use a persistent volume on your platform).
+
+See [DEPLOY-ENV-VARS.txt](DEPLOY-ENV-VARS.txt) for a copy-paste checklist.
+
+---
+
+## Optional: Netlify
+
+`netlify.toml` is included for teams that still use Netlify; it is not required for development or CI.
