@@ -21,6 +21,21 @@ Email: `author@example.com` · Password: `change-me-on-first-login`
 
 ---
 
+## Live demo for a buyer
+
+**GitHub is the code, not the website.** To send someone a clickable link, deploy from this repo to a host (≈10 min).
+
+| Platform | Best for | Works with this repo today? |
+|----------|----------|----------------------------|
+| **[Railway](https://railway.app)** | Easiest live demo | **Yes** (SQLite + volume) |
+| **[Vercel](https://vercel.com)** | Next.js, fast CDN | **Yes** — see [VERCEL-FIX.txt](VERCEL-FIX.txt) |
+| **Netlify** | Static/Jamstack | Same as Vercel — needs Postgres |
+| **Render / Fly.io** | General Node apps | Yes with persistent disk |
+
+Step-by-step: **[SHARE-WITH-BUYER.txt](SHARE-WITH-BUYER.txt)** (Railway recommended).
+
+---
+
 ## Deploy online
 
 Use any host with **Node 20** (Railway, Render, Fly.io, a VPS, etc.).

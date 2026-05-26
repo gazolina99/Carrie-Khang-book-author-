@@ -3,7 +3,13 @@ import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
-// Some platforms expose URL (Netlify-style); otherwise set AUTH_URL yourself.
+// Some platforms inject the public URL automatically.
+if (!process.env.AUTH_URL && process.env.VERCEL_URL) {
+  process.env.AUTH_URL = `https://${process.env.VERCEL_URL}`;
+}
+if (!process.env.NEXT_PUBLIC_SITE_URL && process.env.VERCEL_URL) {
+  process.env.NEXT_PUBLIC_SITE_URL = `https://${process.env.VERCEL_URL}`;
+}
 if (!process.env.AUTH_URL && process.env.URL) {
   process.env.AUTH_URL = process.env.URL;
 }

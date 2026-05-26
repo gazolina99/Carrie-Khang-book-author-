@@ -1,0 +1,53 @@
+FIX VERCEL LOGIN — do this in order
+===================================
+
+Your live site URL is on Vercel (e.g. https://something.vercel.app).
+GitHub is only the CODE repo — not the live link:
+
+  Code:  https://github.com/gazolina99/Carrie-Khang-book-author-
+  Live:  https://YOUR-PROJECT.vercel.app   ← send THIS to buyers
+
+
+WHY LOGIN FAILS
+---------------
+Vercel cannot use SQLite. Login needs a real Postgres database + env vars.
+Pull the latest code from GitHub (includes Vercel fixes), then:
+
+
+STEP 1 — Free database (2 min)
+  https://neon.tech
+  Sign up → New project → copy the connection string (postgresql://…)
+
+
+STEP 2 — Vercel env vars (3 min)
+  vercel.com → your project → Settings → Environment Variables
+
+  Add ALL of these (check Production + Preview + Development):
+
+    DATABASE_URL     = paste Neon connection string
+    AUTH_SECRET      = any long random string (40+ characters)
+    ADMIN_EMAIL      = author@example.com
+    ADMIN_PASSWORD   = your-demo-password
+
+  You do NOT need AUTH_URL on Vercel — it is set automatically.
+
+
+STEP 3 — Redeploy
+  Deployments → … on latest → Redeploy
+
+  The build runs migrations + creates your admin user automatically.
+
+
+STEP 4 — Sign in
+  https://YOUR-PROJECT.vercel.app/login
+  Email + password = what you set for ADMIN_EMAIL / ADMIN_PASSWORD
+
+
+CONNECT GITHUB ↔ VERCEL (if not already)
+  Vercel → Add New Project → Import Carrie-Khang-book-author- from GitHub
+  Every git push redeploys the live site automatically.
+
+
+STILL BROKEN?
+  Vercel → Deployments → latest → Building → check build logs for "prisma migrate"
+  If DATABASE_URL is wrong, fix it in env vars and redeploy again.

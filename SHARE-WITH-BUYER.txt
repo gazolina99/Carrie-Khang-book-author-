@@ -1,0 +1,73 @@
+LIVE DEMO FOR A BUYER — read this first
+======================================
+
+GitHub alone is NOT a website.
+  • Buyers can view CODE at: https://github.com/gazolina99/Carrie-Khang-book-author-
+  • Buyers need a LIVE LINK like https://something.railway.app to click around.
+
+You connect GitHub → hosting service → they give you a public URL.
+
+
+OPTION A — Railway (recommended, works with this repo as-is)
+------------------------------------------------------------
+Free tier, ~10 minutes, no credit card for trial.
+
+1. Go to https://railway.app → Sign in with GitHub
+2. New Project → Deploy from GitHub repo → pick Carrie-Khang-book-author-
+3. Wait for first deploy (may fail — OK)
+
+4. Click the service → Variables → add:
+
+     DATABASE_URL          file:/data/dev.db
+     AUTH_SECRET           (any long random string, 40+ chars)
+     ADMIN_EMAIL           author@example.com
+     ADMIN_PASSWORD        pick-a-demo-password
+     AUTH_URL              https://YOUR-APP-NAME.up.railway.app
+     NEXT_PUBLIC_SITE_URL  same as AUTH_URL
+     RUN_DB_SETUP_ON_BOOT  1
+
+   Replace YOUR-APP-NAME with the URL Railway shows after deploy.
+
+5. Click service → Settings → Volumes → Add volume
+     Mount path: /data
+
+6. Redeploy (Deployments → three dots → Redeploy)
+
+7. Open the Railway URL → send that link to the buyer.
+   Demo login: /login with ADMIN_EMAIL + ADMIN_PASSWORD
+
+
+OPTION B — Vercel (polished Next.js hosting, needs Postgres)
+------------------------------------------------------------
+Vercel does NOT support SQLite. You need a free Neon database.
+
+1. https://neon.tech → New project → copy Postgres connection string
+2. https://vercel.com → Import GitHub repo Carrie-Khang-book-author-
+3. Environment variables:
+
+     DATABASE_URL          (Neon postgres://... string)
+     AUTH_SECRET           long random string
+     ADMIN_EMAIL / ADMIN_PASSWORD
+     RUN_DB_SETUP_ON_BOOT  1
+
+   Vercel sets AUTH_URL automatically.
+
+4. Deploy
+
+NOTE: This repo currently uses SQLite locally. For Vercel you must either:
+  • Ask your developer to switch the database to Postgres for production, OR
+  • Use Railway (Option A) instead — no code changes needed.
+
+
+OPTION C — Netlify
+------------------
+Works but you had issues before. Same as Vercel: needs Postgres, not SQLite.
+
+
+WHAT TO SEND THE BUYER
+----------------------
+  Live demo:  https://your-railway-or-vercel-url.app
+  Source code: https://github.com/gazolina99/Carrie-Khang-book-author-
+  Login:      your-url.app/login  (give them demo email + password)
+
+Do NOT send only the GitHub link if they want to see the design and dashboard.

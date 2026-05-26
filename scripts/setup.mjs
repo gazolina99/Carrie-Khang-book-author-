@@ -13,7 +13,7 @@ console.log("");
 console.log("Ready. Start the site:");
 console.log("  npm run dev");
 console.log("");
-console.log("Open http://localhost:3000");
+console.log("Get DATABASE_URL free at https://neon.tech (required for Vercel and local dev).");
 console.log("Sign in at http://localhost:3000/login");
 console.log("  Email:    author@example.com");
 console.log("  Password: change-me-on-first-login");
